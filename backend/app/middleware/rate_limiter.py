@@ -33,24 +33,3 @@ class RateLimiter:
 
 temperature_rate_limiter = RateLimiter(limit=100, window=1)
 
-
-# # Alternative simpler approach
-# async def simple_rate_limit(request: Request):
-#     redis_client = await get_redis_client(request)
-#     client_ip = request.client.host
-#     key = f"rate_limit:{client_ip}:temperature_get"
-#
-#     limit = 100
-#     window = 60
-#
-#     current_count = await redis_client.incr(key)
-#     if current_count == 1:
-#         await redis_client.expire(key, window)
-#
-#     if current_count > limit:
-#         raise HTTPException(
-#             status_code=429,
-#             detail=f"Rate limit exceeded. Maximum {limit} requests per {window} seconds allowed."
-#         )
-#
-#     return True
