@@ -6,34 +6,35 @@ on:
   pull_request:
     branches: [main]
 
-
 jobs:
-   build-and-test:
+  build-and-test:
     runs-on: ubuntu-latest
 
     services:
-       redis:
-         image: redis:latest
-         ports:
-           - 6378:6379
+      redis:
+        image: redis:latest
+        ports:
+          - 6379:6379
 
     steps:
-       - name: Checkout code
-         uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-       - name: Set up Python
-         uses: actions/setup-python@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.12"
 
-       - name: Install Dependencies
-         run: |
-           python -m venv .venv
-           source .venv/bin/activate
-           python -m pip install --upgrade pip
-           pip install -r backend/requirements.txt
+      - name: Install Dependencies
+        run: |
+          python -m venv .venv
+          source .venv/bin/activate
+          python -m pip install --upgrade pip
+          pip install -r backend/requirements.txt
 
-       - name: Start the server
-         run: |
-           chmod +x limit_testing.sh
-           ./limit_testing.sh
-          working-directory: backend
+      - name: Start the server and test rate limit
+        run: |
+          chmod +x limit_testing.sh
+          ./limit_testing.sh
+        working-directory: backend
 
