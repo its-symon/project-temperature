@@ -4,9 +4,12 @@ from contextlib import asynccontextmanager
 from app.routers.api.v1 import auth, temperature
 from app.routers.api.v1 import websocket
 from app.utils.scheduler import scheduler
+from app.middleware.cors import setup_cors
 import redis.asyncio as redis
 
 app = FastAPI()
+
+setup_cors(app)
 
 api_v1_prefix = "/api/v1"
 
