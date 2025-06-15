@@ -1,0 +1,39 @@
+name: CI - Backend
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+
+  jobs:
+    build-and-test:
+      runs-on: ubuntu-latest
+
+      services:
+        redis:
+          image: redis:latest
+          ports:
+            - 6379:6379
+
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v3
+
+        - name: Set up Python
+          uses: actions/setup-python@v4
+
+        - name: Install Dependencies
+          run: |
+            python -m venv .venv
+            source .venv/bin/activate
+            python -m pip install --upgrade pip
+            pip install -r backend/requirements.txt
+
+        - name: Start the server
+          run: |
+            chmod +x limit_testing.sh
+            ./limit_testing.sh
+
+          working-directory: backend
