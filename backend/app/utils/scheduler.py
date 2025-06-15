@@ -1,3 +1,5 @@
+import asyncio
+from app.services.connection_manager import manager
 from apscheduler.schedulers.background import BackgroundScheduler
 from sqlalchemy.orm import Session
 from app.db import SessionLocal
@@ -14,6 +16,15 @@ def insert_temperature():
         db.add(temp)
         db.commit()
         print("Inserted temperature:", temp_value)
+
+        data = {
+            "temperature" : temp_value,
+            "unit": unit,
+            "timestamp": temp.timestamp.isoformat()
+        }
+
+        asyncio.run(manager.broadcast(data))
+
     except Exception as e:
         print("Error inserting temperature:", e)
     finally:

@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from contextlib import asynccontextmanager
 
 from app.routers.api.v1 import auth, temperature
+from app.routers.api.v1 import websocket
 from app.utils.scheduler import scheduler
 import redis.asyncio as redis
 
@@ -29,9 +30,10 @@ async def lifespan(app: FastAPI):
     await redis_client.close()
     print("Redis connection closed.")
 
-# Set the lifespan
+
 app.router.lifespan_context = lifespan
 
+app.include_router(websocket.router)
 app.include_router(auth.router, prefix=f"{api_v1_prefix}/auth")
 app.include_router(temperature.router, prefix=f"{api_v1_prefix}/temperature")
 
