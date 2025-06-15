@@ -8,7 +8,7 @@ def insert_temperature():
     db: Session = SessionLocal()
     try:
         # Generating some random value for the temperatures
-        temp_value = round(random.uniform(20, 30), 2)
+        temp_value = round(random.uniform(15, 45), 2)
         unit = "celsius"
         temp = Temperature(temperature=temp_value, unit=unit)
         db.add(temp)
@@ -20,5 +20,5 @@ def insert_temperature():
         db.close()
 
 scheduler = BackgroundScheduler()
-scheduler.add_job(insert_temperature, "interval", seconds=30)
+scheduler.add_job(insert_temperature, "interval", minutes=5)
 scheduler.start()
