@@ -7,33 +7,33 @@ on:
     branches: [main]
 
 
-  jobs:
-    build-and-test:
-      runs-on: ubuntu-latest
+jobs:
+   build-and-test:
+    runs-on: ubuntu-latest
 
-      services:
-        redis:
-          image: redis:latest
-          ports:
-            - 6378:6379
+    services:
+       redis:
+         image: redis:latest
+         ports:
+           - 6378:6379
 
-      steps:
-        - name: Checkout code
-          uses: actions/checkout@v2
+    steps:
+       - name: Checkout code
+         uses: actions/checkout@v2
 
-        - name: Set up Python
-          uses: actions/setup-python@v3
+       - name: Set up Python
+         uses: actions/setup-python@v3
 
-        - name: Install Dependencies
-          run: |
-            python -m venv .venv
-            source .venv/bin/activate
-            python -m pip install --upgrade pip
-            pip install -r backend/requirements.txt
+       - name: Install Dependencies
+         run: |
+           python -m venv .venv
+           source .venv/bin/activate
+           python -m pip install --upgrade pip
+           pip install -r backend/requirements.txt
 
-        - name: Start the server
-          run: |
-            chmod +x limit_testing.sh
-            ./limit_testing.sh
-
+       - name: Start the server
+         run: |
+           chmod +x limit_testing.sh
+           ./limit_testing.sh
           working-directory: backend
+
