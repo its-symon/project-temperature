@@ -3,10 +3,11 @@ from typing import Optional
 from jose import jwt, JWTError
 from passlib.context import CryptContext
 
-# Secret key for JWT, keep it secret in env variables in production
-SECRET_KEY = "your-very-secret-key"
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
+from app.config import SECRET_KEY, ALGORITHM, ACCESS_TOKEN_EXPIRE_MINUTES
+
+print(SECRET_KEY)
+print(ALGORITHM)
+print(ACCESS_TOKEN_EXPIRE_MINUTES)
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
