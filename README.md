@@ -6,3 +6,8 @@ docker run --rm -p 8089:8089 -v $(pwd):/mnt locustio/locust -f /mnt/locustfile.p
 
 load testing report-
 ![Farmers Market Finder Demo](image.png)
+
+rate limiting
+![Farmers Market Finder Demo](ratelimit1.png)
+
+![Farmers Market Finder Demo](ratelimit1.png)
