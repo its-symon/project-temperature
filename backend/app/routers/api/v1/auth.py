@@ -29,7 +29,3 @@ def login(user_login: UserLogin, db: Session = Depends(get_db)):
         raise HTTPException(status_code=400, detail="Incorrect email or password")
     access_token = create_access_token(data={"sub": user.email})
     return {"access_token": access_token, "token_type": "bearer"}
-
-@router.get("/test")
-def test():
-    return {"message": "auth router working"}
