@@ -1,6 +1,8 @@
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
 
+from app.db import Base, engine
+from app.models import User, Temperature
 from app.routers.api.v1 import auth, temperature
 from app.routers.api.v1 import websocket
 from app.utils.scheduler import scheduler
@@ -19,8 +21,6 @@ async def lifespan(app: FastAPI):
     # Start Redis
     redis_client = redis.from_url("redis://localhost", encoding="utf-8", decode_responses=True)
     app.state.redis = redis_client
-
-    # No middleware needed for Option 1 - rate limiting is handled in dependencies
 
     # Start scheduler
     if not scheduler.running:
@@ -44,13 +44,10 @@ app.include_router(temperature.router, prefix=f"{api_v1_prefix}/temperature")
 def read_root():
     return {"message": "Welcome to the Temperature Monitoring API!"}
 
-# from app.db import Base, engine
-# from app.models import User, Temperature 
-
 # def create_table():
 #     print("Creating tables...")
 #     Base.metadata.create_all(bind=engine)
 #     print("Tables created.")
-
+#
 # if __name__ == "__main__":
 #     create_table()
