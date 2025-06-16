@@ -14,7 +14,8 @@ router = APIRouter()
 @router.get("/", response_model=List[TemperatureOut], status_code=status.HTTP_200_OK)
 def get_temperature(
     db: Session = Depends(get_db),
-    _: bool = Depends(temperature_rate_limiter)
+    _: bool = Depends(temperature_rate_limiter),
+    current_user: User = Depends(get_current_user)
 ):
     try:
         temperatures = db.query(Temperature).order_by(Temperature.timestamp.desc()).all()
