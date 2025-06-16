@@ -18,8 +18,17 @@ api_v1_prefix = "/api/v1"
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    # Create tables at startup
+    print("Creating tables...")
+    Base.metadata.create_all(bind=engine)
+    print("Tables created.")
+
     # Start Redis
-    redis_client = redis.from_url("redis://localhost", encoding="utf-8", decode_responses=True)
+    # local
+    # redis_client = redis.from_url("redis://localhost", encoding="utf-8", decode_responses=True)
+    # docker
+    redis_client = redis.from_url("redis://redis:6379", encoding="utf-8", decode_responses=True)
+
     app.state.redis = redis_client
 
     # Start scheduler
@@ -43,11 +52,3 @@ app.include_router(temperature.router, prefix=f"{api_v1_prefix}/temperature")
 @app.get("/")
 def read_root():
     return {"message": "Welcome to the Temperature Monitoring API!"}
-
-# def create_table():
-#     print("Creating tables...")
-#     Base.metadata.create_all(bind=engine)
-#     print("Tables created.")
-#
-# if __name__ == "__main__":
-#     create_table()
