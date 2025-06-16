@@ -31,5 +31,5 @@ def insert_temperature():
         db.close()
 
 scheduler = BackgroundScheduler()
-scheduler.add_job(insert_temperature, "interval", minutes=5)
+scheduler.add_job(insert_temperature, "interval", seconds=20)
 scheduler.start()
