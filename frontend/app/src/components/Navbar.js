@@ -16,7 +16,7 @@ function Navbar() {
                 <Typography variant="h6" sx={{ flexGrow: 1 }}>
                     Temperature Dashboard
                 </Typography>
-                <Button color="inherit" component={RouterLink} to="/dashboard">
+                <Button color="inherit" component={RouterLink} to="/">
                     Dashboard
                 </Button>
                 <Button color="inherit" onClick={handleLogout}>

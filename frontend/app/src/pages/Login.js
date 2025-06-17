@@ -26,7 +26,7 @@ export default function LoginPage() {
             if (response.ok) {
                 const data = await response.json();
                 localStorage.setItem('token', data.access_token);
-                navigate('/dashboard');
+                navigate('/');
             } else {
                 const errorData = await response.json();
                 alert('Login failed: ' + (errorData.detail || 'Unknown error'));
