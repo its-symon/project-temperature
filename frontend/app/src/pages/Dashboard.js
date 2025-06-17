@@ -3,6 +3,7 @@ import Chart from 'chart.js/auto';
 import { useNavigate } from 'react-router-dom';
 import Navbar from "../components/Navbar";
 import '../components/style.css';
+import Footer from "../components/Footer";
 
 function TemperatureWebSocket() {
     const [messages, setMessages] = useState([]);
@@ -152,6 +153,7 @@ function TemperatureWebSocket() {
                     <canvas ref={fahrenheitChartRef} />
                 </div>
             </div>
+            <Footer />
         </>
     );
 }
