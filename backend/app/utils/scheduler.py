@@ -9,33 +9,42 @@ import random
 def insert_temperature():
     db: Session = SessionLocal()
     try:
-        unit = random.choice(["celsius", "fahrenheit"])
+        celsius_temp = round(random.uniform(15, 45), 2)
+        fahrenheit_temp = round((celsius_temp * 9 / 5) + 32, 2)
 
-        if unit == "celsius":
-            temp_value = round(random.uniform(15, 45), 2)
-        else:  # fahrenheit
-            temp_value = round(random.uniform(59, 113), 2)
+        celsius_entry = Temperature(temperature=celsius_temp, unit="celsius")
+        fahrenheit_entry = Temperature(temperature=fahrenheit_temp, unit="fahrenheit")
 
-        temp = Temperature(temperature=temp_value, unit=unit)
-        db.add(temp)
+        db.add(celsius_entry)
+        db.add(fahrenheit_entry)
         db.commit()
-        db.refresh(temp)
+        db.refresh(celsius_entry)
+        db.refresh(fahrenheit_entry)
 
-        print(f"Inserted temperature: {temp_value} {unit}")
+        print(f"Inserted Celsius: {celsius_temp} °C")
+        print(f"Inserted Fahrenheit: {fahrenheit_temp} °F")
 
-        data = {
-            "temperature": temp_value,
-            "unit": unit,
-            "timestamp": temp.timestamp.isoformat()
+        celsius_data = {
+            "temperature": celsius_entry.temperature,
+            "unit": celsius_entry.unit,
+            "timestamp": celsius_entry.timestamp.isoformat()
         }
 
-        asyncio.run(manager.broadcast(data))
+        fahrenheit_data = {
+            "temperature": fahrenheit_entry.temperature,
+            "unit": fahrenheit_entry.unit,
+            "timestamp": fahrenheit_entry.timestamp.isoformat()
+        }
+
+        asyncio.run(manager.broadcast(celsius_data))
+        asyncio.run(manager.broadcast(fahrenheit_data))
 
     except Exception as e:
+        db.rollback()
         print("Error inserting temperature:", e)
     finally:
         db.close()
 
 scheduler = BackgroundScheduler()
-scheduler.add_job(insert_temperature, "interval", seconds=20)
+scheduler.add_job(insert_temperature, "interval", seconds=2)
 scheduler.start()
