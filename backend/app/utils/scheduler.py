@@ -9,16 +9,22 @@ import random
 def insert_temperature():
     db: Session = SessionLocal()
     try:
-        # Generating some random value for the temperatures
-        temp_value = round(random.uniform(15, 45), 2)
-        unit = "celsius"
+        unit = random.choice(["celsius", "fahrenheit"])
+
+        if unit == "celsius":
+            temp_value = round(random.uniform(15, 45), 2)
+        else:  # fahrenheit
+            temp_value = round(random.uniform(59, 113), 2)
+
         temp = Temperature(temperature=temp_value, unit=unit)
         db.add(temp)
         db.commit()
-        print("Inserted temperature:", temp_value)
+        db.refresh(temp)
+
+        print(f"Inserted temperature: {temp_value} {unit}")
 
         data = {
-            "temperature" : temp_value,
+            "temperature": temp_value,
             "unit": unit,
             "timestamp": temp.timestamp.isoformat()
         }

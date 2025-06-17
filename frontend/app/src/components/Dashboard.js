@@ -4,11 +4,14 @@ function DashboardPage() {
     const [temperatures, setTemperatures] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
+    const [page, setPage] = useState(1);
+    const limit = 5;
+    const skip = (page - 1) * limit;
 
     useEffect(() => {
         const fetchTemperatures = async () => {
             try {
-                const response = await fetch('http://localhost:8000/api/v1/temperature/', {
+                const response = await fetch(`http://localhost:8000/api/v1/temperature/?skip=${skip}&limit=${limit}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -31,8 +34,8 @@ function DashboardPage() {
             }
         };
 
-        fetchTemperatures();
-    }, []);
+    fetchTemperatures();
+    }, [page]);
 
     return (
         <div>
@@ -64,6 +67,30 @@ function DashboardPage() {
             )}
 
             {!loading && temperatures.length === 0 && <p>No temperature data available.</p>}
+
+            {!loading && (
+                <div style={{ marginTop: '20px' }}>
+                    <button
+                        onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+                        disabled={page === 1}
+                    >
+                        Previous
+                    </button>
+
+                    <span style={{ margin: '0 10px' }}>Page {page}</span>
+
+                    <button
+                        onClick={() => {
+                            if (temperatures.length === limit) {
+                                setPage((prev) => prev + 1);
+                            }
+                        }}
+                        disabled={temperatures.length < limit}
+                    >
+                        Next
+                    </button>
+                </div>
+            )}
         </div>
     );
 }
