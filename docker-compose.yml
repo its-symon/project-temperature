@@ -26,14 +26,14 @@ services:
     ports:
       - "8000:8000"  
 
-  frontend:
-    build:
-      context: ./frontend
-    command: npm start
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules   # Prevent host node_modules overwrite
-    ports:
-      - "3000:3000"
-    depends_on:
-      - backend
+  # frontend:
+  #  build:
+  #    context: ./frontend
+  #  command: npm start
+  #  volumes:
+  #    - ./frontend:/app
+  #    - /app/node_modules
+  #  ports:
+  #    - "3000:3000"
+  #  depends_on:
+  #    - backend

@@ -25,5 +25,5 @@ dist/
 build/
 .env
 
-# frontend
+frontend
 
