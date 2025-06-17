@@ -20,9 +20,10 @@ __pycache__/
 /backend/*.db
 
 # Frontend
-node_modules/
+/frontend/node_modules/
 dist/
 build/
-.env.local
+.env
 
-README.md
+frontend
+
