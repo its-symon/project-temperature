@@ -1,0 +1,60 @@
+/* Container for both charts */
+.charts-container {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+    flex-wrap: wrap;
+}
+
+/* Individual chart wrapper */
+.chart-wrapper {
+    flex: 1;
+    min-width: 400px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+/* Chart titles */
+.chart-wrapper h2 {
+    margin: 0 0 15px 0;
+    font-size: 1.5rem;
+    color: #333;
+    text-align: center;
+    font-weight: 600;
+}
+
+/* Canvas styling */
+.chart-wrapper canvas {
+    width: 100% !important;
+    height: 300px !important;
+    max-width: 100%;
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 768px) {
+    .charts-container {
+        flex-direction: column;
+        gap: 15px;
+        padding: 15px;
+    }
+
+    .chart-wrapper {
+        min-width: unset;
+    }
+
+    .chart-wrapper h2 {
+        font-size: 1.3rem;
+    }
+}
+
+/* Optional: Different colors for chart containers */
+.celsius-chart {
+    border-left: 4px solid rgb(75, 192, 192);
+}
+
+.fahrenheit-chart {
+    border-left: 4px solid rgb(255, 99, 132);
+}
+
