@@ -5,10 +5,6 @@ from passlib.context import CryptContext
 
 from app.config import SECRET_KEY, ALGORITHM, ACCESS_TOKEN_EXPIRE_MINUTES
 
-print(SECRET_KEY)
-print(ALGORITHM)
-print(ACCESS_TOKEN_EXPIRE_MINUTES)
-
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
