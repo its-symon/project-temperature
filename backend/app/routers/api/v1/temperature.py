@@ -13,12 +13,13 @@ router = APIRouter()
 
 @router.get("/", response_model=List[TemperatureOut], status_code=status.HTTP_200_OK)
 def get_temperature(
+    skip: int = 0, limit: int = 10,
     db: Session = Depends(get_db),
     _: bool = Depends(temperature_rate_limiter),
     current_user: User = Depends(get_current_user)
 ):
     try:
-        temperatures = db.query(Temperature).order_by(Temperature.timestamp.desc()).all()
+        temperatures = (db.query(Temperature).order_by(Temperature.timestamp.desc()).offset(skip).limit(limit).all())
         if not temperatures:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
