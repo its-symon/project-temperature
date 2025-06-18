@@ -74,6 +74,7 @@ docker compose up --build -d
 3. Used PostgresSQL as a database
 4. Redis is used for check rate limiting
 5. Websocket endpoint for the real-time data.
+6. Added Cron Jobs to demonstrate real-time data.
 
 ### Frontend: React
 1. Displays real-time charts using Chart.js
