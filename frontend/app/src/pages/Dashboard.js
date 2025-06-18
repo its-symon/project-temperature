@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import Navbar from "../components/Navbar";
 import '../components/style.css';
 import Footer from "../components/Footer";
+import CurrentReadings from '../components/CurrentReadings';
 
 function TemperatureWebSocket() {
     const [messages, setMessages] = useState([]);
@@ -26,7 +27,7 @@ function TemperatureWebSocket() {
                 });
 
                 if (response.status === 401) {
-                    navigate('/signin');
+                    navigate('/login');
                     return;
                 }
 
@@ -143,14 +144,22 @@ function TemperatureWebSocket() {
     return (
         <>
             <Navbar />
-            <div className="charts-container">
+            <div className="content-wrapper" style={{ padding: '2rem' }}>
+                <CurrentReadings
+                    latestCelsius={messages.find(m => m.unit === 'celsius')?.temperature ?? '--'}
+                    latestFahrenheit={messages.find(m => m.unit === 'fahrenheit')?.temperature ?? '--'}
+                />
+
+                <div className="charts-container" style={{ marginTop: '2rem' }}>
+
                 <div className="chart-wrapper celsius-chart">
-                    <h2>Celsius Temperature</h2>
-                    <canvas ref={celsiusChartRef} />
-                </div>
-                <div className="chart-wrapper fahrenheit-chart">
-                    <h2>Fahrenheit Temperature</h2>
-                    <canvas ref={fahrenheitChartRef} />
+                        <h2>Celsius Temperature</h2>
+                        <canvas ref={celsiusChartRef} />
+                    </div>
+                    <div className="chart-wrapper fahrenheit-chart">
+                        <h2>Fahrenheit Temperature</h2>
+                        <canvas ref={fahrenheitChartRef} />
+                    </div>
                 </div>
             </div>
             <Footer />

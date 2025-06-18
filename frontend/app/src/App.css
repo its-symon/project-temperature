@@ -36,3 +36,31 @@
     transform: rotate(360deg);
   }
 }
+
+.footer {
+  background-color: #f5f5f5;
+  padding: 1rem;
+  text-align: center;
+  border-top: 1px solid #ddd;
+  margin-top: auto;
+}
+
+.footer-text {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.footer-icons {
+  margin-top: 0.5rem;
+}
+
+.footer-icon {
+  width: 24px;
+  height: 24px;
+  margin: 0 0.5rem;
+  vertical-align: middle;
+}
+
+.footer-link {
+  text-decoration: none;
+}

@@ -1,52 +1,90 @@
-import * as React from 'react';
-import { AppProvider } from '@toolpad/core/AppProvider';
-import { SignInPage } from '@toolpad/core/SignInPage';
-import { useTheme } from '@mui/material/styles';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import {
+    Card,
+    CardContent,
+    TextField,
+    Typography,
+    Button,
+    Box,
+    Link,
+    FormControlLabel,
+    Checkbox,
+} from '@mui/material';
 
-const providers = [{ id: 'credentials', name: 'Email and Password' }];
-
-export default function LoginPage() {
-    const theme = useTheme();
+export default function Login() {
+    const [form, setForm] = useState({ email: '', password: '' });
     const navigate = useNavigate();
 
-    const handleLogin = async (provider, formData) => {
-        const email = formData.get('email');
-        const password = formData.get('password');
+    const handleChange = (e) => {
+        setForm({ ...form, [e.target.name]: e.target.value });
+    };
 
+    const handleSubmit = async (e) => {
+        e.preventDefault();
         try {
-            const response = await fetch('http://localhost:8000/api/v1/auth/login/', {
+            const res = await fetch('http://localhost:8000/api/v1/auth/login/', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ email, password }),
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: form.email, password: form.password }),
             });
 
-            if (response.ok) {
-                const data = await response.json();
+            if (res.ok) {
+                const data = await res.json();
                 localStorage.setItem('token', data.access_token);
                 navigate('/');
             } else {
-                const errorData = await response.json();
-                alert('Login failed: ' + (errorData.detail || 'Unknown error'));
+                const err = await res.json();
+                alert('Login failed: ' + (err.detail || 'Unknown error'));
             }
-        } catch (error) {
-            alert('An error occurred: ' + error.message);
+        } catch (err) {
+            alert('An error occurred: ' + err.message);
         }
     };
 
     return (
-        <AppProvider theme={theme}>
-            <SignInPage
-                signIn={handleLogin}
-                providers={providers}
-                slotProps={{
-                    emailField: { autoFocus: true },
-                    form: { noValidate: true },
-                    submitButton: { children: 'Login' }
-                }}
-            />
-        </AppProvider>
+        <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh" bgcolor="#f5f5f5">
+            <Card sx={{ maxWidth: 400, width: '100%', padding: 3 }}>
+                <CardContent>
+                    <Typography variant="h5" align="center" gutterBottom>
+                        Sign In
+                    </Typography>
+                    <form onSubmit={handleSubmit}>
+                        <TextField
+                            label="Email"
+                            name="email"
+                            type="email"
+                            fullWidth
+                            margin="normal"
+                            value={form.email}
+                            onChange={handleChange}
+                        />
+                        <TextField
+                            label="Password"
+                            name="password"
+                            type="password"
+                            fullWidth
+                            margin="normal"
+                            value={form.password}
+                            onChange={handleChange}
+                        />
+                        <FormControlLabel
+                            control={<Checkbox name="remember" color="primary" />}
+                            label="Remember me"
+                            sx={{ mt: 1 }}
+                        />
+                        <Button type="submit" variant="contained" color="primary" fullWidth sx={{ mt: 2 }}>
+                            Login
+                        </Button>
+                    </form>
+                    <Typography variant="body2" align="center" sx={{ mt: 2 }}>
+                        Don't have an account?{' '}
+                        <Link href="/signup" underline="hover">
+                            Sign up
+                        </Link>
+                    </Typography>
+                </CardContent>
+            </Card>
+        </Box>
     );
 }
