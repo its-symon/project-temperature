@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   db:
     image: postgres
@@ -19,17 +21,17 @@ services:
     env_file:
       - .env
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000
-    volumes:
-      - ./backend:/app
+    ports:
+      - "8000:8000"
     depends_on:
       - db
-    ports:
-      - "8000:8000"  
+      - redis
 
   frontend:
     build:
       context: ./frontend/app
     ports:
       - "3000:3000"
+    command: ["serve", "-s", "build", "-l", "3000"]
     depends_on:
       - backend
