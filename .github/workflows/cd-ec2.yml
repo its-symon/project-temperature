@@ -21,6 +21,12 @@ jobs:
           source: "."
           target: "/home/ubuntu/project-temperature"
 
+      - name: Create .env file
+        run: |
+          echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> .env
+          echo "ALGORITHM=${{ secrets.ALGORITHM }}" >> .env
+          echo "ACCESS_TOKEN_EXPIRE_MINUTES=${{ secrets.ACCESS_TOKEN_EXPIRE_MINUTES }}" >> .env
+
       - name: SSH into EC2 and deploy
         uses: appleboy/ssh-action@v1.0.0
         with:
