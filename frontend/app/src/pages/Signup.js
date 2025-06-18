@@ -1,35 +1,45 @@
-import * as React from 'react';
-import { AppProvider } from '@toolpad/core/AppProvider';
-import { SignInPage } from '@toolpad/core/SignInPage';
-import { useTheme } from '@mui/material/styles';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import {
+    Card,
+    CardContent,
+    TextField,
+    Typography,
+    Button,
+    Box,
+    Link,
+} from '@mui/material';
 
-const providers = [{ id: 'credentials', name: 'Email and Password' }];
+export default function SignUp() {
+    const [form, setForm] = useState({
+        firstName: '',
+        lastName: '',
+        email: '',
+        password: '',
+    });
 
-export default function CredentialsSignUpPage() {
-    const theme = useTheme();
-    const navigate = useNavigate(); // ✅ Moved here
+    const navigate = useNavigate();
 
-    const signUp = async (provider, formData) => {
+    const handleChange = (e) => {
+        setForm({ ...form, [e.target.name]: e.target.value });
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
         try {
-            const email = formData.get('email');
-            const password = formData.get('password');
-
-            const response = await fetch('http://localhost:8000/api/v1/auth/signup/', {
+            const res = await fetch('http://localhost:8000/api/v1/auth/signup/', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ email, password }),
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: form.email, password: form.password }),
             });
 
-            if (response.ok) {
-                const data = await response.json();
+            if (res.ok) {
+                const data = await res.json();
                 localStorage.setItem('token', data.access_token);
-                navigate('/signin', { replace: true }); // ✅ Use it here
+                navigate('/login');
             } else {
-                const errorData = await response.json();
-                alert('Signup failed: ' + (errorData.detail || 'Unknown error'));
+                const err = await res.json();
+                alert('Signup failed: ' + (err.detail || 'Unknown error'));
             }
         } catch (err) {
             alert('An error occurred: ' + err.message);
@@ -37,16 +47,43 @@ export default function CredentialsSignUpPage() {
     };
 
     return (
-        <AppProvider theme={theme}>
-            <SignInPage
-                signIn={signUp}
-                providers={providers}
-                slotProps={{
-                    emailField: { autoFocus: true },
-                    form: { noValidate: true },
-                    submitButton: { children: 'Sign Up' }
-                }}
-            />
-        </AppProvider>
+        <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh" bgcolor="#f5f5f5">
+            <Card sx={{ maxWidth: 400, width: '100%', padding: 3 }}>
+                <CardContent>
+                    <Typography variant="h5" align="center" gutterBottom>
+                        Sign Up
+                    </Typography>
+                    <form onSubmit={handleSubmit}>
+                        <TextField
+                            label="Email"
+                            name="email"
+                            type="email"
+                            fullWidth
+                            margin="normal"
+                            value={form.email}
+                            onChange={handleChange}
+                        />
+                        <TextField
+                            label="Password"
+                            name="password"
+                            type="password"
+                            fullWidth
+                            margin="normal"
+                            value={form.password}
+                            onChange={handleChange}
+                        />
+                        <Button type="submit" variant="contained" color="primary" fullWidth sx={{ mt: 2 }}>
+                            Sign Up
+                        </Button>
+                    </form>
+                    <Typography variant="body2" align="center" sx={{ mt: 2 }}>
+                        Already registered?{' '}
+                        <Link href="/login" underline="hover">
+                            Sign in
+                        </Link>
+                    </Typography>
+                </CardContent>
+            </Card>
+        </Box>
     );
 }

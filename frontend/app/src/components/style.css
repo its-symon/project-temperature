@@ -58,3 +58,6 @@
     border-left: 4px solid rgb(255, 99, 132);
 }
 
+.content-wrapper {
+    padding: 60px 24px 40px;
+}
