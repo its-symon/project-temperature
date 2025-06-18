@@ -7,7 +7,10 @@ COPY package*.json ./
 COPY public ./public
 COPY src ./src
 
-RUN npm install
+RUN npm ci
+
+ENV NODE_OPTIONS=--max_old_space_size=4096
+
 RUN npm run build
 
 # Stage 2: Serve with `serve`
@@ -20,3 +23,4 @@ COPY --from=build /app/build ./build
 
 EXPOSE 3000
 CMD ["serve", "-s", "build", "-l", "3000"]
+

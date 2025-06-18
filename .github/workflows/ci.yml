@@ -1,40 +1,60 @@
-name: CI - Backend
+name: CI - Backend and Frontend
 
 on:
-  push:
-    branches: [main]
   pull_request:
+    branches: [main]
+  push:
     branches: [main]
 
 jobs:
-  build-and-test:
+  backend-test:
     runs-on: ubuntu-latest
-
     services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: 12345
+          POSTGRES_DB: temperature_db
+        ports:
+          - 5432:5432
+
       redis:
         image: redis:latest
         ports:
           - 6379:6379
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.12"
+          python-version: '3.12'
 
-      - name: Install Dependencies
+      - name: Install and test backend
         run: |
           python -m venv .venv
           source .venv/bin/activate
-          python -m pip install --upgrade pip
+          pip install --upgrade pip
           pip install -r backend/requirements.txt
+          chmod +x backend/limit_testing.sh
+          ./backend/limit_testing.sh
 
-      - name: Start the server and test rate limit
+  frontend-build:
+    runs-on: ubuntu-latest
+    needs: backend-test
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Build frontend
+        working-directory: frontend/app
         run: |
-          chmod +x limit_testing.sh
-          ./limit_testing.sh
-        working-directory: backend
-
+          npm install
+          npm run build
+      
